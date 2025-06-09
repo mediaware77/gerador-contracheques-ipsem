@@ -1,0 +1,246 @@
+	header("Content-type: text/html; charset=utf-8");
+	date_default_timezone_set('America/Recife');
+	$matri = $_POST['form']['mat'];
+	$matri2 = $_POST['form']['mat'];
+	$matri3 = $_POST['form']['mat'];
+	$matri4 = $_POST['form']['mat'];
+	$mes = $_POST['form']['mes'];
+	$ano = $_POST['form']['anob'];
+	$senha = $_POST['form']['senha2'];
+	$senha2 = $_POST['form']['new_senha'];
+	$senhaipsem = "ipsem2016";
+
+	/**************************** LIGAÇÃO A TABELA CADASTROS *****************************/
+	$items0 = array();
+	$db0 =& JFactory::getDBO();
+	$query0 = "SELECT `MAR`, `NOME` , `CPF`, `TIPO`, `BLOQUEIO` , `BANCO` , `CONTA` , `SENHA` FROM `#__cadastros` WHERE `MAR` = '$matri'  ";
+	$db0->setQuery($query0);
+	$results0 = $db0->loadObjectList();
+	foreach ($results0 as $result0) {
+		$matricula = $result0->MAR;
+		$nome = $result0->NOME;
+		$cpf = $result0->CPF;
+		$tipo = $result0->TIPO;
+		$banco = $result0->BANCO;
+		$conta = $result0->CONTA;
+		$block = $result0->BLOQUEIO;
+		$padrao = $result0->SENHA;
+
+	$itemsK = array();
+	$itemsM = array();
+
+	$dbK = JFactory::getDbo();
+	$dbK->setQuery("SELECT `TIPO`, `VALOR`, `CD` FROM `#__valores` WHERE `MAR` = '$matri3' AND `CD` = 'C'  AND MES = '$mes[0]'  AND ANO = '$ano[0]' ORDER BY `ORDEM` ");
+	$resultsK = $dbK->loadObjectList();
+	foreach ($resultsK as $resultK) {
+	  $value = $resultK->TIPO;
+	  $label = $resultK->VALOR;
+
+		$creditos = $value."</BR>";
+		$creditos1 = number_format($label, 2, ',', '.'). "</BR>";
+		$itemsK[] = $creditos;	
+		$itemsM[] = $creditos1;	
+	}	
+	// REPETINDO
+	$itemsS = array();
+	$dbS = JFactory::getDbo();
+//	$dbS->setQuery("SELECT `TIPO`, `VALOR`, `CD` FROM `#__valores` WHERE `MAR` = '$matri3' AND `CD` = 'C' AND MES = '$mes[0]'  AND ANO = '$ano[0]' and ordem not in(40,44,55,223) ORDER BY `ORDEM` ");
+    $dbS->setQuery("SELECT `TIPO`, `VALOR`, `CD` FROM `#__valores` WHERE `MAR` = '$matri3' AND `CD` = 'C' AND MES = '$mes[0]'  AND ANO = '$ano[0]' ORDER BY `ORDEM` "); 		
+	$resultsS = $dbS->loadObjectList();
+	foreach ($resultsS as $resultS) {
+	$labelS = $resultS->VALOR;
+	$itemsS[] = $labelS;	
+	(integer)$arraytotal = $itemsS;
+	}
+	$itemsL = array();
+	$itemsN = array();
+	$dbG = JFactory::getDbo();
+	$dbG->setQuery("SELECT `TIPO`, `VALOR` FROM `#__valores` WHERE `MAR` = '$matri3' AND `CD` = 'D' AND MES = '$mes[0]'  AND ANO = '$ano[0]' ORDER BY `ORDEM` ");
+	$resultsG = $dbG->loadObjectList();
+	foreach ($resultsG as $resultG) {
+	  $valG = $resultG->TIPO;
+	  $labG = $resultG->VALOR;
+	  $itemsR[] = $labG ;	
+	(integer)$arraytotal2 = $itemsR;
+		$debitos = $valG."</BR>";
+		$debitos1 = number_format($labG, 2, ',', '.'). " </BR>";
+		$itemsL[] = $debitos;
+		$itemsN[] = $debitos1;
+	}
+		//FIM DO REPETINDO
+		$itemsK = implode("\n", $itemsK);
+		$itemsL = implode("\n", $itemsL);
+		$itemsM = implode("\n", $itemsM);
+		$itemsN = implode("\n", $itemsN);
+		$itemsS = implode("\n", $itemsS);
+
+	$fix = array_sum ($arraytotal);
+	$fix2 = array_sum ($arraytotal2);
+	$fixz = ($fix - $fix2);
+	$fix3 = ($fix / 100);
+	$fix4 = ($fix3 * 35);
+		/**************************** FIM DA LIGAÇÃO A TABELA CADASTROS *****************************/
+	  if ($mes[0] == 01 )
+	  {$nomemes = "Janeiro";}
+	  if ($mes[0] == 02 )
+	  {$nomemes = "Fevereiro";}
+	  if ($mes[0] == 03 )
+	  {$nomemes = "Março";}
+	  if ($mes[0] == 04 )
+	  {$nomemes = "Abril";}
+	  if ($mes[0] == 05 )
+	  {$nomemes = "Maio";}
+	  if ($mes[0] == 06 )
+	  {$nomemes = "Junho";}
+	  if ($mes[0] == 07 )
+	  {$nomemes = "Julho";}
+	  if ($mes[0] == 8 )
+	  {$nomemes = "Agosto";}
+	if ($mes[0] == 9)
+	{$nomemes = "Setembro";}
+	  if ($mes[0] == 10 )
+	  {$nomemes = "Outubro";}
+	  if ($mes[0] == 11 )
+	  {$nomemes = "Novembro";}
+	  if ($mes[0] == 12 )
+	  {$nomemes = "Dezembro";}
+	  if ($mes[0] == 13 )
+	  {$nomemes = "13º Salario";}
+
+	   $cab3 = "<p style=\"font-family: 'Roboto', sans-serif; font-size:110%; \">Demonstrativo de Pagamento de ".$nomemes." de ".$ano[0];
+	   $cab2 = "<p style=\"font-size:135%;  \">Instituto de Previdência Social dos Servidores Públicos Municipais de Campina Grande</p><p style=\"font-size:100%;  \">Rua Maria Vieira César, 135 - Jardim Tavares - Cep: 58402-037 Campina Grande - PB <br/>Fone: (83) 3341-4212 - CNPJ:  41.134.826/0001-20</p>";
+		
+		
+		
+	
+		
+		$items[] = "
+<style type=\"text/css\">
+
+
+    @media print {
+     .notprint { visibility:hidden; }
+	 .footer{ visibility:hidden; } 
+	 .header{ visibility:hidden; }
+	 .body .container {border: 0px; -webkit-box-shadow: 0px; box-shadow: 0px;visibility:hidden; }}
+	
+	.notprint { position: relative; }
+ 
+	.borda {
+	border: 1px solid #b3b3b3;
+	padding: 10px;
+	}
+	.tg  {
+	width: 100%; 
+	border: 1px solid #b3b3b3;
+	border-radius:3px;
+	padding: 10px;
+	background-color: #fff;
+	}
+	.tg2 
+	{
+	border: 1px solid #eee;
+	border-radius:5px;
+	padding: 5px;
+	margin: 10px;
+	}
+	.img
+	{
+	width: 140px;
+	margin-botton:15px;
+	}
+	.tabela1 {
+	position: absolute;
+	top: 20px;
+	visibility:
+	visible;
+	left: 10%;
+	width: 80%;
+	}
+	.head{
+	    padding-top: 20px;}
+		
+	</style>
+
+	<div class=\"tabela1\">
+	<table class=\"tg\" >
+	  <tr>
+		<th><img src=\"images/ipsem.png\" alt=\"ipsem\"></th>
+		<th class=\"head \">".$cab2.$cab3."</th>
+		<th><img src=\"images/pref.png\" alt=\"Prefeitura Municipal\"></th>
+	  </tr>
+	</table>
+	<table class=\"tg\" >
+		<td class=\"borda\"><sup>NOME DO BENEFICIÁRIO</sup><br/><b>".$nome."</b></td>
+		<td class=\"borda\"><sup>MATRÍCULA</sup><br/><b>".$matricula."</b></td>
+		<td class=\"borda\"><sup>BENEFÍCIO / CARGO</sup><br/><b>".$tipo."</b></td>
+	  </tr>
+	  <tr>
+		<td class=\"borda\"><sup>DOMICÍLIO BANCÁRIO ATUAL</sup><br/><b>".$banco."</b></td>
+		<td class=\"borda\"><sup>CPF</sup><br/><b>".$cpf."</b></td>
+		<td class=\"borda\"><sup>CONTA CORRENTE</sup><br/><b>".$conta."</b></td>
+	   
+	  </tr>
+	  <tr>
+	 <td class=\"borda\" colspan=\"2\">DESCRIÇÃO</td>
+		<td class=\"borda\">VALORES</td>
+	  </tr>
+	<td class=\"borda\" colspan=\"2\"><b>CRÉDITOS</b></BR></BR>".$itemsK."</BR><b>DÉBITOS</b></BR></BR>".$itemsL."</td>
+		<td class=\"borda\" style=\"text-align:right;\"></BR></BR>".$itemsM."</BR></BR></BR>".$itemsN."</td>
+	  </tr>
+	  <tr>
+		<td class=\"borda\" colspan=\"2\">VALOR BRUTO</td>
+		<td class=\"borda\" style=\"text-align:right;\"><b> " . number_format(array_sum($arraytotal), 2, ',', '.') ."</b></td>
+	  </tr>
+	  <tr>
+		<td class=\"borda\" colspan=\"2\">VALOR DESCONTO</td>
+		<td class=\"borda\" style=\"text-align:right;\"><b> " . number_format(array_sum ($arraytotal2), 2, ',', '.') ."</b></td>
+	  </tr>
+	  <tr>
+		<td class=\"borda\" colspan=\"2\">VALOR LÍQUIDO</td>
+		<td class=\"borda\" style=\"text-align:right;\"><b>" . number_format($fixz, 2, ',', '.') ." </b></td>
+	  </tr>
+	  <tr>
+		<td class=\"borda\" colspan=\"3\"> - Margem Bruta consignável de 35%: ".number_format($fix4, 2, ',', '.')."<BR><BR><sup>MENSAGEM:</sup><br/>Atenção beneficiário(a)! </BR></BR><b>Recadastramento no mês de seu aniversário.<br><br>
+
+Aniversariantes do mês de JUNHO/2025, Compareça ao IPSEM de Segunda a Sexta das 08:00 as 12:00</b><br><br>
+	<p align=\"right\"> <font size =\"1\">Emissão: ".date('d/m/Y H:i:s')."  <br/>..:Coordenadoria de TI - IPSEM - Site: ipsem.campinagrande.pb.gov.br</font></p></td>
+	  </tr>
+	</table>
+	<input type=\"button\" align=\"center \" value=\"Imprimir\"  class=\"notprint\"  onClick=\"window.print();\">   
+	<input type=\"button\" name=\"btnVolta\" value=\"Voltar\" class=\"notprint\" onclick=\"location.reload();\" /> 
+	</div> ";
+	}
+	$items = implode("\n", $items);
+	$N = "0";
+	$S = "1";
+
+	$table1 = " ";
+	//if ($matricula != 0 && $padrao != $senhaipsem ){
+	if ($matricula != 0){
+	if ( $label == 0 && $block == $N ){
+		$thankYouMessage= "<p style=\"font-size: 20px; text-align: center; \"><BR/>Não há lançamentos para a data selecionada."."</p><BR/><BR/><BR/>"."<input type=\"button\" name=\"btnVolta\" value=\"Voltar\" class=\"notprint\" onclick=\"location.reload();\" /> ";
+	}
+	if($tipo == "Pensao" || $tipo == "Aposentadoria"){
+	if ( $label != 0 && $block == $N ){
+	$thankYouMessage= $items.$table1."</p>";
+	}}else{
+		$thankYouMessage= "<p style=\"font-size: 20px; text-align: center; \"><BR/>Matrícula não corresponde a Aposentado ou Pensionista."."</p><BR/><BR/><BR/>"."<input type=\"button\" name=\"btnVolta\" value=\"Voltar\" class=\"notprint\" onclick=\"location.reload();\" /> ";	
+	}
+
+	if ( $block == $S )
+	{
+	$thankYouMessage= "<p style=\"font-size: 20px; text-align: center; \"><BR/>Conta bloqueada. Contate o IPSEM através do telefone  (83) 3341-4212"."</p><BR/><BR/><BR/>"."<input type=\"button\" name=\"btnVolta\" value=\"Voltar\" class=\"notprint\" onclick=\"location.reload();\" /> ";}
+	}
+	if ($matricula == 0 )
+	{
+	$thankYouMessage= "<p style=\"font-size: 20px; text-align: center; \"><BR/>Matrícula não confere, verifique as informações inseridas e tente novamente.<BR/><BR/>"."<input type=\"button\" name=\"btnVolta\" value=\"Voltar\" class=\"notprint\" onclick=\"location.reload();\" /> ";}
+
+/*	 if ($matricula != 0 && $padrao == $senhaipsem  )
+
+	{
+	$thankYouMessage= "<p style=\"font-size: 20px; text-align: center; \">
+	
+	<BR/>Antes de prosseguir é necessário criar uma nova senha. <BR/><BR/>
+	<a href=\"index.php?option=com_content&view=article&id=2\" style=\"color: blue; \">Clique aqui para criar uma nova senha.</a>"."
+	</p><BR/><BR/><BR/>"."<input type=\"button\" name=\"btnVolta\" value=\"Voltar\" class=\"notprint\" onclick=\"location.reload();\" /> ";}

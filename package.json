@@ -1,0 +1,35 @@
+{
+  "name": "gerador-contracheques-ipsem",
+  "version": "1.0.0",
+  "description": "Gerador de contracheques em massa para IPSEM Campina Grande",
+  "main": "contracheque.js",
+  "scripts": {
+      "start": "node contracheque.js",
+      "dev": "nodemon contracheque.js",
+      "install-deps": "npm install",
+      "gerar": "node contracheque.js",
+      "gerar-html": "node contracheque.js --html",
+      "gerar-pdf": "node contracheque.js --pdf",
+      "gerar-ambos": "node contracheque.js"
+  },
+  "keywords": [
+    "contracheque",
+    "ipsem",
+    "campina-grande",
+    "mysql",
+    "html",
+    "pdf"
+  ],
+  "author": "IPSEM Campina Grande",
+  "license": "MIT",
+  "dependencies": {
+    "mysql2": "^3.6.5",
+    "puppeteer": "^22.8.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
